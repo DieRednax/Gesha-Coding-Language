@@ -1,3 +1,4 @@
-int varA = 1;
-int var_b = 16;
-int varC = a + b + 8;
+int varA=1;
+int var_b=16;
+int varC=b+8;
+float float2=64564;
