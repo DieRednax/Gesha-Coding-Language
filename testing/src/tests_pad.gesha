@@ -1,0 +1,3 @@
+int varA = 1;
+int var_b = 16;
+int varC = a + b + 8;

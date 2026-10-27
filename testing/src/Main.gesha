@@ -1,0 +1,10 @@
+module Main {
+    public f(void) main() {
+        //vars
+        int varA = 1;
+        int var_b = 16;
+        int varC = a + b + 8;
+
+//        System.out.println(varC);
+    }
+}
