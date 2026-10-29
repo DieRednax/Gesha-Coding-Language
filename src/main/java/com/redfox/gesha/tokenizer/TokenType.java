@@ -7,6 +7,13 @@ public enum TokenType {
     ASSIGN_EQ,
     DOT_OPERATOR,
 
+    ASSIGN_ADD,
+    ASSIGN_SUB,
+    ASSIGN_MUL,
+    ASSIGN_DIV,
+    OPERATOR_INC,
+    OPERATOR_DEC,
+
     LEFT_P, // (
     RIGHT_P, // )
     LEFT_BP, // [

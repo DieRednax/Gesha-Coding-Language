@@ -46,7 +46,6 @@ public class GeshaCompiler {
             if (token.getLine() > i) {
                 tokensSB.append("\n");
                 i = token.getLine();
-                System.out.println("New line");
             }
             tokensSB.append(token.getTokenType()
                     + "(\""

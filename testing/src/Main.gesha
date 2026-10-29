@@ -4,6 +4,16 @@ public f<void> main() {
      int b = 16;
      int c = a + b + 8;
 
+     int t1 = 2;
+     t1 += 2;
+     t1 -= 2;
+     t1++;
+     t1--;
+
+     int t2 = 2;
+     t2 *= 2;
+     t2 /= 2;
+
      System.out.println(c);
 
      //arithmic ops

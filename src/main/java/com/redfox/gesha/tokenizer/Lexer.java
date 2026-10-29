@@ -33,12 +33,8 @@ public class Lexer {
         char c = advance();
 
         switch (c) {
-            case '+' -> addToken(tokens, TokenType.OPERATOR_ADD, null);
-            case '-' -> addToken(tokens, TokenType.OPERATOR_SUB, null);
-            case '*' -> addToken(tokens, TokenType.OPERATOR_MUL, null);
             case '^' -> addToken(tokens, TokenType.OPERATOR_POW, null);
             case '\\' -> addToken(tokens, TokenType.OPERATOR_RT, null);
-            case '%' -> addToken(tokens, TokenType.OPERATOR_MOD, null);
             case ';' -> addToken(tokens, TokenType.SEMI_COLON, null);
             case '.' -> addToken(tokens, TokenType.DOT_OPERATOR, null);
             case '(' -> addToken(tokens, TokenType.LEFT_P, null);
@@ -59,9 +55,40 @@ public class Lexer {
 
             case '/' -> {
                 if (!match('/')) {
-                    addToken(tokens, TokenType.OPERATOR_DIV, null);
+                    addToken(
+                            tokens,
+                            match('=') ? TokenType.ASSIGN_DIV
+                                    : TokenType.OPERATOR_DIV,
+                            null
+                    );
                 } else removeComment();
             }
+
+            case '+' -> {
+                if (match('=')) {
+                    addToken(tokens, TokenType.ASSIGN_ADD, null);
+                } else if (match('+')) {
+                    addToken(tokens, TokenType.OPERATOR_INC, null);
+                } else {
+                    addToken(tokens, TokenType.OPERATOR_ADD, null);
+                }
+            }
+            case '-' -> {
+                if (match('=')) {
+                    addToken(tokens, TokenType.ASSIGN_SUB, null);
+                } else if (match('-')) {
+                    addToken(tokens, TokenType.OPERATOR_DEC, null);
+                } else {
+                    addToken(tokens, TokenType.OPERATOR_SUB, null);
+                }
+            }
+            case '*' -> addToken(
+                    tokens,
+                    match('=') ? TokenType.ASSIGN_MUL
+                            : TokenType.OPERATOR_MUL,
+                    null
+            );
+            case '%' -> addToken(tokens, TokenType.OPERATOR_MOD, null);
 
             case ' ', '\r', '\t', ',' -> {}
 
