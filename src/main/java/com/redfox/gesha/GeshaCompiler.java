@@ -1,5 +1,6 @@
 package com.redfox.gesha;
 
+import com.redfox.gesha.precompiler.Precompiler;
 import com.redfox.gesha.tokenizer.Lexer;
 import com.redfox.gesha.tokenizer.Token;
 import com.redfox.gesha.tokenizer.TokenType;
@@ -29,12 +30,15 @@ public class GeshaCompiler {
             return;
         }
 
+        System.out.println("Precompiling...");
+        String precompiledSrc = new Precompiler(input).precompile();
+
         System.out.println("Lexing...");
-        List<Token> tokens = new Lexer(input).tokenize();
-        System.out.println("Tokens: ");
-        for (Token token : tokens) {
-            System.out.println(token.getTokenType() + ": " + token.getLexeme());
-        }
+        List<Token> tokens = new Lexer(precompiledSrc).tokenize();
+//        System.out.println("Tokens: ");
+//        for (Token token : tokens) {
+//            System.out.println(token.getTokenType() + ": " + token.getLexeme());
+//        }
 
         StringBuilder tokensSB = new StringBuilder();
         int i = 1;
@@ -58,11 +62,16 @@ public class GeshaCompiler {
         }
 
         try {
-            Path outPath = Path.of(args[1] + "/tokens.rft");
-            if (!Files.exists(outPath)) {
-                Files.createFile(outPath);
+            Path outPathTokens = Path.of(args[1] + "/tokens.rft");
+            Path outPathPrecompiledSrc = Path.of(args[1] + "/precompiled.gesha");
+            if (!Files.exists(outPathTokens)) {
+                Files.createFile(outPathTokens);
             }
-            Files.writeString(outPath, tokensSB.toString());
+            if (!Files.exists(outPathPrecompiledSrc)) {
+                Files.createFile(outPathPrecompiledSrc);
+            }
+            Files.writeString(outPathPrecompiledSrc, precompiledSrc);
+            Files.writeString(outPathTokens, tokensSB.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
- public f<void> main() {
+public f<void> main() {
     //vars
      int a = 1;
      int b = 16;

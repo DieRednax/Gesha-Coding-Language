@@ -5,6 +5,7 @@ import java.util.List;
 public class TokenStatics {
     public static List<String> getKeywords() {
         return List.of(
+                "import",
                 "public",
                 "private",
                 "f",
