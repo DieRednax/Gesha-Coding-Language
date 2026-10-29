@@ -1,10 +1,40 @@
-module Main {
-    public f(void) main() {
-        //vars
-        int varA = 1;
-        int var_b = 16;
-        int varC = a + b + 8;
+ public f<void> main() {
+    //vars
+     int a = 1;
+     int b = 16;
+     int c = a + b + 8;
 
-//        System.out.println(varC);
-    }
+     System.out.println(c);
+
+     //arithmic ops
+     System.out.println(8 + 2);
+     System.out.println(8 - 2);
+     System.out.println(8 * 2);
+     System.out.println(8 / 2);
+     System.out.println(8 % 3); //mod
+     System.out.println(8 ^ 2); //pow
+     System.out.println(2\ 8); //sqrt
+
+     //var types
+     int intA = 15;
+     int intB = 0b1101; //binary 13
+     int intCa = 0x0d; //hex 13
+     int intCb = #0d; //hex 13
+     long longA = 15;
+
+//        float floatA = 15.f;
+//        float floatB = 15f;
+     float floatC = 15.5;
+//        double doubleA = 15.d;
+//        double doubleB = 15d;
+     double doubleC = 15.5;
+
+     //function calls
+     printAdd(15, 10);
+}
+
+private f<int> printAdd(int a, int b) {
+     int result = a + b;
+     System.out.println(result);
+     return result;
 }

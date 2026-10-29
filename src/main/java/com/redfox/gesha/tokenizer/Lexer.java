@@ -36,24 +36,39 @@ public class Lexer {
             case '+' -> addToken(tokens, TokenType.OPERATOR_ADD, null);
             case '-' -> addToken(tokens, TokenType.OPERATOR_SUB, null);
             case '*' -> addToken(tokens, TokenType.OPERATOR_MUL, null);
-            case '/' -> addToken(tokens, TokenType.OPERATOR_DIV, null);
             case '^' -> addToken(tokens, TokenType.OPERATOR_POW, null);
             case '\\' -> addToken(tokens, TokenType.OPERATOR_RT, null);
+            case '%' -> addToken(tokens, TokenType.OPERATOR_MOD, null);
             case ';' -> addToken(tokens, TokenType.SEMI_COLON, null);
+            case '.' -> addToken(tokens, TokenType.DOT_OPERATOR, null);
+            case '(' -> addToken(tokens, TokenType.LEFT_P, null);
+            case ')' -> addToken(tokens, TokenType.RIGHT_P, null);
+            case '[' -> addToken(tokens, TokenType.LEFT_BP, null);
+            case ']' -> addToken(tokens, TokenType.RIGHT_BP, null);
+            case '{' -> addToken(tokens, TokenType.LEFT_CP, null);
+            case '}' -> addToken(tokens, TokenType.RIGHT_CP, null);
+            case '<' -> addToken(tokens, TokenType.LEFT_AP, null);
+            case '>' -> addToken(tokens, TokenType.RIGHT_AP, null);
 
             case '=' -> addToken(
                     tokens,
-                    match('=') ? TokenType.OPERATOR_EQ
-                            : TokenType.ASSIGN_EQ,
+                    /*match('=') ? TokenType.OPERATOR_EQ
+                            : */TokenType.ASSIGN_EQ,
                     null
             );
 
-            case ' ', '\r', '\t' -> {}
+            case '/' -> {
+                if (!match('/')) {
+                    addToken(tokens, TokenType.OPERATOR_DIV, null);
+                } else removeComment();
+            }
+
+            case ' ', '\r', '\t', ',' -> {}
 
             case '\n' -> line++;
 
             default -> {
-                if (Character.isDigit(c)) {
+                if (Character.isDigit(c) || c == '#') {
                     scanNumber(tokens);
                 } else if (Character.isLetter(c) || c == '_') {
                     scanIdentifier(tokens);
@@ -73,6 +88,12 @@ public class Lexer {
         tokens.add(new Token(type, lexeme, literal, line));
     }
 
+    private void removeComment() {
+        while (peek() != '\n') {
+            advance();
+        }
+    }
+
     private void scanIdentifier(List<Token> tokens) {
         while (Character.isLetterOrDigit(peek())
                 || peek() == '_') {
@@ -89,19 +110,30 @@ public class Lexer {
     }
 
     private void scanNumber(List<Token> tokens) {
-        while (Character.isDigit(peek())) {
+        while (Character.isDigit(peek())
+                || (peek() == 'b' && currentLexeme().equals("0"))
+                || (peek() == 'x' && currentLexeme().equals("0"))
+                || currentLexeme().equals("#")
+                || (TokenStatics.getHexCharacters().contains(peek())
+                    && (currentLexeme().contains("0x") || currentLexeme().contains("#")))
+                || (peek() == '.' && TokenStatics.isNumeric(currentLexeme()))) {
             advance();
         }
 
-        String lexeme = currentLexeme();
+        String lexeme = currentLexeme().replace("#", "0x");
 
         try {
-            Integer value = Integer.parseInt(lexeme);
-            addToken(tokens, TokenType.INT_LITERAL,
-                    value.toString());
+            if (lexeme.contains("0b") || lexeme.contains("0x")) {
+                addToken(tokens, TokenType.NUM_LITERAL,
+                        Integer.toString(TokenStatics.parseAnyStringToInteger(lexeme)), lexeme);
+            } else {
+                Double value = Double.parseDouble(lexeme);
+                addToken(tokens, TokenType.NUM_LITERAL,
+                        value.toString(), lexeme);
+            }
         } catch (NumberFormatException e) {
             throw new RuntimeException(
-                    "Invalid integer literal: " + lexeme
+                    "Invalid number literal: " + lexeme
                             + " at line " + line,
                     e
             );

@@ -2,6 +2,7 @@ package com.redfox.gesha;
 
 import com.redfox.gesha.tokenizer.Lexer;
 import com.redfox.gesha.tokenizer.Token;
+import com.redfox.gesha.tokenizer.TokenType;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,6 +34,37 @@ public class GeshaCompiler {
         System.out.println("Tokens: ");
         for (Token token : tokens) {
             System.out.println(token.getTokenType() + ": " + token.getLexeme());
+        }
+
+        StringBuilder tokensSB = new StringBuilder();
+        int i = 1;
+        for (Token token : tokens) {
+            if (token.getLine() > i) {
+                tokensSB.append("\n");
+                i = token.getLine();
+                System.out.println("New line");
+            }
+            tokensSB.append(token.getTokenType()
+                    + "(\""
+                    + token.getLexeme()
+                    + "\", "
+                    + token.getLiteral()
+                    + ", "
+                    + token.getLine()
+                    + ")"
+            );
+            tokensSB.append(", ");
+
+        }
+
+        try {
+            Path outPath = Path.of(args[1] + "/tokens.rft");
+            if (!Files.exists(outPath)) {
+                Files.createFile(outPath);
+            }
+            Files.writeString(outPath, tokensSB.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

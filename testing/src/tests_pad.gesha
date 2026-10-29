@@ -1,4 +1,6 @@
-int varA=1;
-int var_b=16;
-int varC=b+8;
-float float2=64564;
+int varA = 1;
+int var_b = 16;
+int varC = b + 8;
+float float2 = 1.2;
+
+this.one = 1;
