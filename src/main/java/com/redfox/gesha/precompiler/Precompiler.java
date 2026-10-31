@@ -8,14 +8,18 @@ public class Precompiler {
         this.src = src;
     }
 
-    public String precompile() {
+    public PrecompileOutputData precompile() {
         String precompiledCode;
+        int lineOffset = -1;
 
         precompiledCode = String.format("""
                 import java.lang.*;
                 %s
                 """, src);
 
-        return precompiledCode;
+        return PrecompileOutputData.builder()
+                .outputSrc(precompiledCode)
+                .lineOffset(lineOffset)
+                .build();
     }
 }

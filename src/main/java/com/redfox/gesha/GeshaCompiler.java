@@ -1,5 +1,6 @@
 package com.redfox.gesha;
 
+import com.redfox.gesha.precompiler.PrecompileOutputData;
 import com.redfox.gesha.precompiler.Precompiler;
 import com.redfox.gesha.tokenizer.Lexer;
 import com.redfox.gesha.tokenizer.Token;
@@ -32,10 +33,10 @@ public class GeshaCompiler {
         }
 
         System.out.println("Precompiling...");
-        String precompiledSrc = new Precompiler(input).precompile();
+        PrecompileOutputData precompiledSrc = new Precompiler(input).precompile();
 
         System.out.println("Lexing...");
-        List<Token> tokens = new Lexer(precompiledSrc).tokenize();
+        List<Token> tokens = new Lexer(precompiledSrc.getOutputSrc(), precompiledSrc.getLineOffset()).tokenize();
 //        System.out.println("Tokens: ");
 //        for (Token token : tokens) {
 //            System.out.println(token.getTokenType() + ": " + token.getLexeme());
@@ -65,7 +66,7 @@ public class GeshaCompiler {
             Path outPathTokens = Path.of(args[1] + "/tokens.rft");
             Path outPathPrecompiledSrc = Path.of(args[1] + "/precompiled.gesha");
 
-            createOrWriteFile(outPathPrecompiledSrc, precompiledSrc);
+            createOrWriteFile(outPathPrecompiledSrc, precompiledSrc.getOutputSrc());
             createOrWriteFile(outPathTokens, tokensSB.toString());
         } catch (IOException e) {
             e.printStackTrace();

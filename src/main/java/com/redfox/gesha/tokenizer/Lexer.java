@@ -13,8 +13,9 @@ public class Lexer {
     private int start = 0;
     private int current = 0;
 
-    public Lexer(final String src) {
+    public Lexer(final String src, final int lineOffset) {
         this.src = src;
+        this.line += lineOffset;
     }
 
     public List<Token> tokenize() {
