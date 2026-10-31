@@ -3,18 +3,19 @@ package com.redfox.gesha;
 import com.redfox.gesha.precompiler.Precompiler;
 import com.redfox.gesha.tokenizer.Lexer;
 import com.redfox.gesha.tokenizer.Token;
-import com.redfox.gesha.tokenizer.TokenType;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 public class GeshaCompiler {
     public static void main(String[] args) {
         if (2 > args.length) {
-            System.err.println("At least 2 input params must be supplied.");
+            System.err.println("At least 2 input params must be supplied. Instead present: ");
+            System.err.println(Arrays.toString(args));
             return;
         }
 
@@ -47,15 +48,15 @@ public class GeshaCompiler {
                 tokensSB.append("\n");
                 i = token.getLine();
             }
-            tokensSB.append(token.getTokenType()
-                    + "(\""
-                    + token.getLexeme()
-                    + "\", "
-                    + token.getLiteral()
-                    + ", "
-                    + token.getLine()
-                    + ")"
-            );
+            tokensSB
+                    .append(token.getTokenType())
+                    .append("(\"")
+                    .append(token.getLexeme())
+                    .append("\", ")
+                    .append(token.getLiteral())
+                    .append(", ")
+                    .append(token.getLine())
+                    .append(")");
             tokensSB.append(", ");
 
         }
@@ -63,14 +64,9 @@ public class GeshaCompiler {
         try {
             Path outPathTokens = Path.of(args[1] + "/tokens.rft");
             Path outPathPrecompiledSrc = Path.of(args[1] + "/precompiled.gesha");
-            if (!Files.exists(outPathTokens)) {
-                Files.createFile(outPathTokens);
-            }
-            if (!Files.exists(outPathPrecompiledSrc)) {
-                Files.createFile(outPathPrecompiledSrc);
-            }
-            Files.writeString(outPathPrecompiledSrc, precompiledSrc);
-            Files.writeString(outPathTokens, tokensSB.toString());
+
+            createOrWriteFile(outPathPrecompiledSrc, precompiledSrc);
+            createOrWriteFile(outPathTokens, tokensSB.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,5 +74,12 @@ public class GeshaCompiler {
 
     private static String readInputFile(Path filePath) throws IOException {
         return Files.readString(filePath);
+    }
+    private static void createOrWriteFile(Path filePath, String content) throws IOException {
+        Path parentDir = filePath.getParent();
+        if (parentDir != null) Files.createDirectories(parentDir);
+        if (Files.notExists(filePath)) Files.createFile(filePath);
+
+        Files.writeString(filePath, content);
     }
 }
